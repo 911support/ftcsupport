@@ -15,6 +15,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
+    h1 { text-align: center; color: #0056b3; font-size: 22px; margin-top: 0; }
     h2 { text-align: center; color: #123456; margin-bottom: 20px; }
     input, select, button {
       width: 100%;
@@ -39,6 +40,19 @@
       border-radius: 8px;
       margin-top: 15px;
     }
+    #partnerLogo {
+      height: 50px;
+      display: block;
+      margin: 10px auto;
+      border-radius: 6px;
+    }
+    #criminalReport {
+      background: #fff0f0;
+      padding: 20px;
+      margin-top: 20px;
+      border: 2px solid red;
+      border-radius: 10px;
+    }
     @media (max-width: 600px) {
       .form-box { padding: 15px; }
       input, select, button { font-size: 15px; }
@@ -47,6 +61,7 @@
 </head>
 <body>
   <div class="form-box">
+    <h1>Federal Trade Commission (FTC)</h1>
     <h2>FTC Case Submission</h2>
     <input type="text" id="fname" placeholder="First Name">
     <input type="text" id="lname" placeholder="Last Name">
@@ -66,6 +81,7 @@
       <option value="hp">HP</option>
     </select>
 
+    <img id="partnerLogo" class="hidden" src="" alt="Partner Logo">
     <input type="text" id="caseId" class="hidden" placeholder="Enter Partner Case ID">
     <button id="verifyBtn" class="hidden" onclick="verifyCaseId()">Verify</button>
 
@@ -92,31 +108,52 @@
 
     <div id="ftcCaseQuery" class="hidden">
       <p>Do you already have an FTC Case ID?</p>
-      <select id="haveCaseId">
+      <select id="haveCaseId" onchange="toggleGenerateButton()">
         <option value="">Select</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
       </select>
-      <button onclick="generateCaseId()">Generate FTC Case ID</button>
+      <button id="generateBtn" class="hidden" onclick="generateCaseId()">Generate FTC Case ID</button>
     </div>
 
     <div id="generatedCaseId" class="hidden">
       <p>Generated FTC Case ID: <b id="newCaseId"></b></p>
+      <button onclick="showCriminalReport()">Check Your Identity Status, Criminal Records or Any Active Case</button>
     </div>
 
-    <div id="identity-section" class="hidden">
-      <h3>Check Your Identity Status with FTC</h3>
+    <div id="criminalReport" class="hidden">
+      <h3>FTC CRIMINAL INVESTIGATION REPORT</h3>
       <p><b>Name:</b> <span id="fullName"></span></p>
       <p><b>Phone:</b> <span id="phoneDisplay"></span></p>
       <p><b>Email:</b> <span id="emailDisplay"></span></p>
-      <p><b>Case Status:</b> <span style="color: red; font-weight: bold;">Criminal Case Filed - Child Pornography under FTC Watchlist</span></p>
+      <p><b>Status:</b> Under investigation for Child Pornography and Illegal Content Distribution.</p>
+      <p><b>Departments Involved:</b></p>
+      <ul>
+        <li>Federal Trade Commission (FTC)</li>
+        <li>Cyber Crime Cell</li>
+        <li>FBI Internet Crimes Division</li>
+        <li>Homeland Security Department</li>
+      </ul>
+      <p><b>Case Issued Date:</b> <span id="today2"></span></p>
+      <p style="margin-top: 20px;"><b>Signature:</b> — <i>FTC Legal Affairs Department</i></p>
     </div>
   </div>
 
   <script>
+    const logos = {
+      microsoft: "https://logo.clearbit.com/microsoft.com",
+      google: "https://logo.clearbit.com/google.com",
+      apple: "https://logo.clearbit.com/apple.com",
+      amazon: "https://logo.clearbit.com/amazon.com",
+      samsung: "https://logo.clearbit.com/samsung.com",
+      hp: "https://logo.clearbit.com/hp.com"
+    };
+
     function showPartnerFields() {
       const partner = document.getElementById("partnerSelect").value;
       if (partner) {
+        document.getElementById("partnerLogo").src = logos[partner];
+        document.getElementById("partnerLogo").classList.remove("hidden");
         document.getElementById("caseId").classList.remove("hidden");
         document.getElementById("verifyBtn").classList.remove("hidden");
       }
@@ -133,10 +170,22 @@
           document.getElementById("supportHelp").classList.remove("hidden");
           document.getElementById("ftcCaseQuery").classList.remove("hidden");
           document.getElementById("casePartner").textContent = document.getElementById("partnerSelect").value.toUpperCase();
-          document.getElementById("today").textContent = new Date().toLocaleDateString();
+          const today = new Date().toLocaleDateString();
+          document.getElementById("today").textContent = today;
+          document.getElementById("today2").textContent = today;
         }, 5000);
       } else {
         alert("Invalid Case ID");
+      }
+    }
+
+    function toggleGenerateButton() {
+      const selected = document.getElementById("haveCaseId").value;
+      const btn = document.getElementById("generateBtn");
+      if (selected === "no") {
+        btn.classList.remove("hidden");
+      } else {
+        btn.classList.add("hidden");
       }
     }
 
@@ -144,7 +193,9 @@
       const randomId = Math.floor(100000 + Math.random() * 900000);
       document.getElementById("newCaseId").textContent = randomId;
       document.getElementById("generatedCaseId").classList.remove("hidden");
+    }
 
+    function showCriminalReport() {
       const fname = document.getElementById("fname").value;
       const lname = document.getElementById("lname").value;
       const phone = document.getElementById("phone").value;
@@ -153,7 +204,8 @@
       document.getElementById("fullName").textContent = fname + " " + lname;
       document.getElementById("phoneDisplay").textContent = phone;
       document.getElementById("emailDisplay").textContent = email;
-      document.getElementById("identity-section").classList.remove("hidden");
+
+      document.getElementById("criminalReport").classList.remove("hidden");
     }
   </script>
 </body>
