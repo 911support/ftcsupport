@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FTC Case Submission</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 20px; }
+    .form-box { background: white; padding: 25px; max-width: 600px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .form-box h2 { text-align: center; margin-bottom: 20px; }
+    .form-box input, .form-box select, .form-box button {
+      width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;
+    }
+    #partner-logo { height: 50px; display: block; margin: 10px auto; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h2>FTC Case Submission</h2>
+    
+    <input type="text" id="fname" placeholder="First Name" required>
+    <input type="text" id="lname" placeholder="Last Name" required>
+    <input type="tel" id="phone" placeholder="Phone Number" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="text" id="address" placeholder="Full Address" required>
+    <input type="text" id="ftcLast4" placeholder="Last 4 digits of FTC Reference Number" required>
+
+    <select id="partnerSelect" onchange="showPartnerInfo()">
+      <option value="">Select Technical Support Partner</option>
+      <option value="microsoft">Microsoft</option>
+      <option value="google">Google</option>
+      <option value="apple">Apple</option>
+      <option value="amazon">Amazon</option>
+      <option value="samsung">Samsung</option>
+      <option value="hp">HP</option>
+    </select>
+
+    <img id="partner-logo" class="hidden" src="" alt="Partner Logo">
+    <input type="text" id="caseId" class="hidden" placeholder="Verify Case ID Number" oninput="checkCaseId()">
+
+    <div id="supportHelp" class="hidden">
+      <p>Did <span id="partnerName"></span> help you in informing FTC?</p>
+      <select id="informer">
+        <option value="">Select Option</option>
+        <option value="self">I informed FTC myself</option>
+        <option value="partner">Yes, <span id="partnerNameRepeat"></span> helped</option>
+      </select>
+    </div>
+
+    <div id="finalCaseCheck" class="hidden">
+      <input type="text" id="finalCaseId" placeholder="Enter FTC Case ID">
+      <button onclick="redirectToNext()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const logos = {
+      microsoft: "https://logo.clearbit.com/microsoft.com",
+      google: "https://logo.clearbit.com/google.com",
+      apple: "https://logo.clearbit.com/apple.com",
+      amazon: "https://logo.clearbit.com/amazon.com",
+      samsung: "https://logo.clearbit.com/samsung.com",
+      hp: "https://logo.clearbit.com/hp.com"
+    };
+
+    function showPartnerInfo() {
+      const partner = document.getElementById("partnerSelect").value;
+      const logo = logos[partner];
+      const logoImg = document.getElementById("partner-logo");
+      const partnerName = document.getElementById("partnerName");
+      const partnerNameRepeat = document.getElementById("partnerNameRepeat");
+
+      if (logo) {
+        logoImg.src = logo;
+        logoImg.classList.remove("hidden");
+        partnerName.textContent = partner.charAt(0).toUpperCase() + partner.slice(1);
+        partnerNameRepeat.textContent = partner.charAt(0).toUpperCase() + partner.slice(1);
+        document.getElementById("caseId").classList.remove("hidden");
+      }
+    }
+
+    function checkCaseId() {
+      const id = document.getElementById("caseId").value;
+      if (id === "42986") {
+        document.getElementById("supportHelp").classList.remove("hidden");
+        document.getElementById("finalCaseCheck").classList.remove("hidden");
+      }
+    }
+
+    function redirectToNext() {
+      const finalId = document.getElementById("finalCaseId").value;
+      if (finalId === "778965") {
+        window.location.href = "thankyou.html";
+      } else {
+        alert("Invalid FTC Case ID");
+      }
+    }
+  </script>
+</body>
+</html>
