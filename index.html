@@ -6,17 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #e9f0f7; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f2f5f9; margin: 0; padding: 0; }
+    header {
+      background: #002a4e;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+    header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    footer {
+      background: #002a4e;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
     .form-box {
       background: white;
       padding: 20px;
       max-width: 600px;
-      margin: 40px auto;
+      margin: 20px auto 80px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    h1 { text-align: center; color: #0056b3; font-size: 22px; margin-top: 0; }
-    h2 { text-align: center; color: #123456; margin-bottom: 20px; }
+    h1, h2 {
+      text-align: center;
+      color: #002a4e;
+    }
     input, select, button {
       width: 100%;
       padding: 12px;
@@ -40,7 +62,7 @@
       border-radius: 8px;
       margin-top: 15px;
     }
-    #partnerLogo {
+    #partnerLogo, #ftcLogoFinal {
       height: 50px;
       display: block;
       margin: 10px auto;
@@ -53,6 +75,24 @@
       border: 2px solid red;
       border-radius: 10px;
     }
+    #loadingTimer {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #loaderCircle {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #007bff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     @media (max-width: 600px) {
       .form-box { padding: 15px; }
       input, select, button { font-size: 15px; }
@@ -60,8 +100,12 @@
   </style>
 </head>
 <body>
-  <div class="form-box">
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/US-FederalTradeCommission-Seal.svg/1200px-US-FederalTradeCommission-Seal.svg.png" alt="FTC Logo">
     <h1>Federal Trade Commission (FTC)</h1>
+  </header>
+
+  <div class="form-box">
     <h2>FTC Case Submission</h2>
     <input type="text" id="fname" placeholder="First Name">
     <input type="text" id="lname" placeholder="Last Name">
@@ -113,15 +157,22 @@
         <option value="yes">Yes</option>
         <option value="no">No</option>
       </select>
-      <button id="generateBtn" class="hidden" onclick="generateCaseId()">Generate FTC Case ID</button>
+      <button id="generateBtn" class="hidden" onclick="startGenerateTimer()">Generate FTC Case ID</button>
+      <div id="loadingTimer" class="hidden">Please wait <span id="countdown">10</span> seconds...</div>
     </div>
 
     <div id="generatedCaseId" class="hidden">
       <p>Generated FTC Case ID: <b id="newCaseId"></b></p>
-      <button onclick="showCriminalReport()">Check Your Identity Status, Criminal Records or Any Active Case</button>
+      <button onclick="startCriminalLoading()">Check Your Identity Status, Criminal Records or Any Active Case</button>
+    </div>
+
+    <div id="loadingIdentity" class="hidden">
+      <div id="loaderCircle"></div>
+      <p>Loading Identity Records... <span id="identityCountdown">60</span> sec</p>
     </div>
 
     <div id="criminalReport" class="hidden">
+      <img id="ftcLogoFinal" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/US-FederalTradeCommission-Seal.svg/1200px-US-FederalTradeCommission-Seal.svg.png" alt="FTC Logo">
       <h3>FTC CRIMINAL INVESTIGATION REPORT</h3>
       <p><b>Name:</b> <span id="fullName"></span></p>
       <p><b>Phone:</b> <span id="phoneDisplay"></span></p>
@@ -138,6 +189,10 @@
       <p style="margin-top: 20px;"><b>Signature:</b> — <i>FTC Legal Affairs Department</i></p>
     </div>
   </div>
+
+  <footer>
+    © 2025 Federal Trade Commission. All Rights Reserved.
+  </footer>
 
   <script>
     const logos = {
@@ -189,10 +244,40 @@
       }
     }
 
+    function startGenerateTimer() {
+      let countdown = 10;
+      document.getElementById("generateBtn").classList.add("hidden");
+      const timerDiv = document.getElementById("loadingTimer");
+      timerDiv.classList.remove("hidden");
+      const interval = setInterval(() => {
+        document.getElementById("countdown").textContent = countdown;
+        countdown--;
+        if (countdown < 0) {
+          clearInterval(interval);
+          timerDiv.classList.add("hidden");
+          generateCaseId();
+        }
+      }, 1000);
+    }
+
     function generateCaseId() {
       const randomId = Math.floor(100000 + Math.random() * 900000);
       document.getElementById("newCaseId").textContent = randomId;
       document.getElementById("generatedCaseId").classList.remove("hidden");
+    }
+
+    function startCriminalLoading() {
+      let seconds = 60;
+      document.getElementById("loadingIdentity").classList.remove("hidden");
+      const interval = setInterval(() => {
+        document.getElementById("identityCountdown").textContent = seconds;
+        seconds--;
+        if (seconds < 0) {
+          clearInterval(interval);
+          document.getElementById("loadingIdentity").classList.add("hidden");
+          showCriminalReport();
+        }
+      }, 1000);
     }
 
     function showCriminalReport() {
